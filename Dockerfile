@@ -29,10 +29,14 @@ COPY --from=client-builder /app/client/public/fonts ./public/fonts
 # Verzeichnisse erstellen
 RUN mkdir -p /app/data /app/uploads/files /app/uploads/covers
 
+# Startup script (symlinks /app/uploads into the persistent volume at /app/data)
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Umgebung setzen
 ENV NODE_ENV=production
 ENV PORT=3000
 
 EXPOSE 3000
 
-CMD ["node", "src/index.js"]
+CMD ["/app/start.sh"]
